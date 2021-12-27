@@ -40,3 +40,9 @@ Authorization: Bearer {{token}}
     "image": "https://i.stack.imgur.com/xHWG8.jpg"
   }
 }
+
+###
+# @name GetCurrentUser
+GET http://localhost:8080/api/users
+Content-Type: application/json
+Authorization: Bearer {{token}}

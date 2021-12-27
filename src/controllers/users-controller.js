@@ -20,7 +20,6 @@ const add_users = async (req, res) => {
 
     }catch(error){
         return res.status(500).json({
-            success: false,
             error: error.message
         });
     }
@@ -83,8 +82,35 @@ const login_user = async (req, res) => {
     }
   }
 
+  const get_current_user = async (req, res) => {
+    try {
+      const { email } = req.user
+      const user = await findUserByEmail(email);
+      if (!user) {
+        return res.status(422).json({
+          error: 'User not found'
+        })
+      }
+  
+      return res.json({
+        user: {
+          email: user.email,
+          username: user.username,
+          bio: user.bio,
+          image: user.image,
+          token: req.user.token
+        }
+      })
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message
+      })
+    }
+  }
+
 export {
     add_users,
     login_user,
-    update_users
+    update_users,
+    get_current_user
 };
