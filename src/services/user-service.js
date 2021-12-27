@@ -15,6 +15,9 @@ const createUser = async data => {
     return newUser;
 };
 
+const findUserByEmail = email => UserModel.findOne({ email }); 
+
 export {
-    createUser
+    createUser,
+    findUserByEmail
 }
