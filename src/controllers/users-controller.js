@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { createUser, findUserByEmail } from '../services/user-service';
+import { createUser, findUserByEmail, updateUser } from '../services/user-service';
 
 const add_users = async (req, res) => {
     try{
@@ -57,7 +57,34 @@ const login_user = async (req, res) => {
     }
   }
 
+  const update_users = async (req, res) => {
+    try {
+      const user = await findUserByEmail(req.user.email);
+      if (!user) {
+        return res.status(422).json({
+          error: 'User not found'
+        })
+      }
+  
+      const updatedUser = await updateUser(user, req.body);
+
+      return res.json({
+        user: {
+          email: updatedUser.email,
+          username: updatedUser.username,
+          bio: updatedUser.bio,
+          image: updatedUser.image
+        }
+      })
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message
+      })
+    }
+  }
+
 export {
     add_users,
-    login_user
+    login_user,
+    update_users
 };
