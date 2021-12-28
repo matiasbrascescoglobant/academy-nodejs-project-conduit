@@ -9,9 +9,7 @@ const createUser = async data => {
         password: hashedPass
     });
 
-    await newUser.save();
-
-    return newUser;
+    return newUser.save();
 };
 
 const findUserByEmail = email => UserModel.findOne({ email }); 

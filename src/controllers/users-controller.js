@@ -4,19 +4,35 @@ import { createUser, findUserByEmail, updateUser } from '../services/user-servic
 
 const add_users = async (req, res) => {
     try{
-        const {email, password, username, bio, image } = req.body.user;
+      const {email, password, username } = req.body.user;
 
-        const newUser = await createUser({
-            email,
-            password,
-            username,
-            bio,
-            image
-        });
+      const user = await findUserByEmail(email);
+      if (user) {
+          return res.status(422).json({
+              error: 'The email already exists.'
+          });
+      }
 
-        return res.status(201).json({
-            user: newUser
-          })
+      const newUser = await createUser({
+          email,
+          password,
+          username
+      });
+
+      const token = jwt.sign({
+        email: newUser.email,
+        username: newUser.username
+      }, process.env.JWT_SECRET);
+
+      return res.status(201).json({
+        user: {
+          email: newUser.email,
+          token,
+          username: newUser.username,
+          bio: newUser.bio || "",
+          image: newUser.image || null
+        }
+      });
 
     }catch(error){
         return res.status(500).json({
@@ -32,7 +48,7 @@ const login_user = async (req, res) => {
         if (!user || !bcrypt.compareSync(password, user.password)) {
             return res.status(422).json({
                 error: 'Wrong credentials'
-            })
+            });
         }
 
         const token = jwt.sign({
@@ -45,14 +61,14 @@ const login_user = async (req, res) => {
                 email: user.email,
                 token,
                 username: user.username,
-                bio: user.bio,
-                image: user.image
+                bio: user.bio || "",
+                image: user.image || null
             }
-        })
+        });
     } catch (error) {
         return res.status(500).json({
             error: error.message
-        })
+        });
     }
   }
 
@@ -62,7 +78,7 @@ const login_user = async (req, res) => {
       if (!user) {
         return res.status(422).json({
           error: 'User not found'
-        })
+        });
       }
   
       const updatedUser = await updateUser(user, req.body);
@@ -71,14 +87,15 @@ const login_user = async (req, res) => {
         user: {
           email: updatedUser.email,
           username: updatedUser.username,
-          bio: updatedUser.bio,
-          image: updatedUser.image
+          bio: updatedUser.bio || "",
+          image: updatedUser.image || null,
+          token: req.user.token || ""
         }
-      })
+      });
     } catch (error) {
       return res.status(500).json({
         error: error.message
-      })
+      });
     }
   }
 
@@ -89,18 +106,18 @@ const login_user = async (req, res) => {
       if (!user) {
         return res.status(422).json({
           error: 'User not found'
-        })
+        });
       }
   
       return res.json({
         user: {
           email: user.email,
           username: user.username,
-          bio: user.bio,
-          image: user.image,
-          token: req.user.token
+          bio: user.bio || "",
+          image: user.image || null,
+          token: req.user.token || ""
         }
-      })
+      });
     } catch (error) {
       return res.status(500).json({
         error: error.message

@@ -6,14 +6,15 @@ const log = debug('globant:auth-middleware');
 
 const authUserMiddleware = (req, res, next) => {
   const authHeader = req.get('Authorization');
+  
   if (!authHeader) {
     return res.status(422).json({
       error: 'Missing token'
     });
   }
-console.log(authHeader);
-  const token = authHeader.replace('Token ', '');
 
+  const token = authHeader.replace('Token ', '');
+  console.log(token)
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
