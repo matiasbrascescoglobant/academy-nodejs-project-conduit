@@ -46,3 +46,10 @@ Authorization: Bearer {{token}}
 GET http://localhost:8080/api/users
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+
+###
+# @name GetAllArticles
+GET http://localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Bearer {{token}}
