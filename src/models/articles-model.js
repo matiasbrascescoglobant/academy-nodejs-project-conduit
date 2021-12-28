@@ -11,7 +11,7 @@ const ArticleSchema = new Schema({
             tag: String
         }
     ],
-    favorited: Boolean,
+    favorited: String,
     favoritesCount: Number,
     author: { 
         type: mongoose.Schema.Types.ObjectId, 

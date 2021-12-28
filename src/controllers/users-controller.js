@@ -27,7 +27,7 @@ const add_users = async (req, res) => {
 
 const login_user = async (req, res) => {
     try {
-        const { email, password } = req.body.user
+        const { email, password } = req.body.user;
         const user = await findUserByEmail(email);
         if (!user || !bcrypt.compareSync(password, user.password)) {
             return res.status(422).json({

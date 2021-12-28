@@ -1,10 +1,12 @@
-import { getAllArticles } from '../services/article-service';
+import { getArticles } from '../services/article-service';
+import { responseArticles } from '../response_formatter/response-article';
 
-const get_all_articles = async (req, res) => {
+const get_articles = async (req, res) => {
     try {
-      const articles = await getAllArticles();
+      const articles = await getArticles(req.query);
+
       return res.json({
-        "articles": articles,
+        "articles": await responseArticles(articles),
         "articlesCount": articles.length
       });
     } catch (error) {
@@ -15,5 +17,5 @@ const get_all_articles = async (req, res) => {
 }
 
 export {
-    get_all_articles
+    get_articles
 };
