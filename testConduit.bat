@@ -1,1 +1,1 @@
-newman run Conduit.postman_collection.json --global-var "APIURL=http://localhost:8080/api" --global-var "USERNAME=mnbd" --global-var "EMAIL=matias.brascesco@globant.com" --global-var "PASSWORD=123"
+newman run Conduit.postman_collection.json --delay-request 500 --global-var "APIURL=http://localhost:8080/api" --global-var "USERNAME=mnbd" --global-var "EMAIL=matias.brascesco@globant.com" --global-var "PASSWORD=123"
