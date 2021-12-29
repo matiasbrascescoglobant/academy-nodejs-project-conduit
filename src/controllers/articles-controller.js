@@ -1,6 +1,7 @@
 import { getArticles, createArticle, 
          updateArticle, getSingleArticleBySlug,
-         findArticleBySlug, favoriteArticle } from '../services/article-service';
+         findArticleBySlug, favoriteArticle,
+         unfavoriteArticle } from '../services/article-service';
 import { findUserByEmail, findUserByUsername } from '../services/user-service';
 import { findTagByName } from '../services/tag-service';
 import { responseArticles } from '../response_formatter/response-article';
@@ -144,11 +145,35 @@ const favorite_article = async (req, res) => {
   }
 }
 
+const unfavorite_article = async (req, res) => {
+  try{
+    const { slug } = req.params;
+    const article = await findArticleBySlug(slug);
+    if (!article) {
+      return res.status(422).json({
+        error: 'Article not found'
+      });
+    }
+
+    const unfavorite = await unfavoriteArticle(article);
+
+    return res.json({
+      article: responseArticles(unfavorite)
+    });
+
+  }catch(error){
+      return res.status(500).json({
+          error: error.message
+      });
+  }
+}
+
 export {
     get_articles,
     add_articles,
     get_feed_articles,
     get_single_article_by_slug,
     update_articles,
-    favorite_article
+    favorite_article,
+    unfavorite_article
 };

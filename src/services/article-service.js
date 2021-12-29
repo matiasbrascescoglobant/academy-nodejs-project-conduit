@@ -55,11 +55,26 @@ const favoriteArticle = async (article) => {
     return await ArticleModel.findByIdAndUpdate(article.id, article, { new: true });
 }
 
+const unfavoriteArticle = async (article) => {
+    if(typeof article.favoritesCount === 'undefined'){
+        article.favoritesCount = Number(0);
+    } else {
+        article.favoritesCount = Number(article.favoritesCount - 1);
+    }
+
+    if(article.favoritesCount === 0){
+        article.favorited = Boolean(false);
+    }
+    
+    return await ArticleModel.findByIdAndUpdate(article.id, article, { new: true });
+}
+
 export {
     getArticles,
     createArticle,
     getSingleArticleBySlug,
     updateArticle,
     findArticleBySlug,
-    favoriteArticle
+    favoriteArticle,
+    unfavoriteArticle
 }
