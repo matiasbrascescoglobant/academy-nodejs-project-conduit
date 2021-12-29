@@ -35,6 +35,28 @@ const getArticles = (query) => {
     });
 };
 
+const getFeedArticles = (query) => {
+    const { offset = 0, limit = 20 } = query;
+
+    return ArticleModel.find({ 
+        limit: limit, 
+        offset: offset,
+        distinct: true,
+        order: [['createdAt', 'DESC']], 
+        include: 
+        [
+            {
+                model: UsersModel,
+                atributes: ['username', 'bio', 'image'],   
+            },
+            {
+                model: TagsModel,
+                attributes: ['name'],
+            }
+        ]
+    });
+};
+
 const createArticle = async data => {
     const newArticle = new ArticleModel({
         ...data
@@ -45,5 +67,6 @@ const createArticle = async data => {
 
 export {
     getArticles,
-    createArticle
+    createArticle,
+    getFeedArticles
 }
