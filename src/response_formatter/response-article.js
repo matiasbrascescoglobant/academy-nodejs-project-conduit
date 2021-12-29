@@ -5,16 +5,16 @@ const responseArticle = (article) => ({
   body: article.body,
   createdAt: article.createdAt,
   updatedAt: article.updatedAt,
-  favorited: article.favorited,
-  favoritesCount: article.favoritesCount,
+  favorited: article.favorited || false,
+  favoritesCount: article.favoritesCount || 0,
   author: 
     {
-        username: article.User.username,
-        bio: article.User.bio,
-        image: article.User.image,
+        username: article.author.username,
+        bio: article.author.bio || "",
+        image: article.author.image || null,
         following: false
     },
-  tagList: ({ nameTags }) => nameTags.map(tag => tag.name)
+  tagList: article.tagList.map(tag => tag.name)
 });
 
 const responseArticles = (articles) => {

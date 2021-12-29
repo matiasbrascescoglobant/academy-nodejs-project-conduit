@@ -6,17 +6,10 @@ const ArticleSchema = new Schema({
     title: { type: String, required: [true, 'The title of the article cannot be empty.'] },
     description: { type: String, required: [true, 'The description of the article cannot be empty.'] },
     body: { type: String, required: [true, 'The body of the article cannot be empty.'] },
-    tagList: [
-        {
-            tag: String
-        }
-    ],
+    tagList: { type: [mongoose.Schema.Types.ObjectId], ref: 'tag' },
     favorited: String,
     favoritesCount: Number,
-    author: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User'
-    },
+    author: { type: Schema.Types.ObjectId, ref: "user" }
 }, {
     timestamps: true,
     versionKey: false

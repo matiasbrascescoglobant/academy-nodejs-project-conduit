@@ -1,6 +1,6 @@
 import ArticleModel from '../models/articles-model';
-import usersModel from '../models/users-model';
-import tagsModel from '../models/tags-model';
+import UsersModel from '../models/users-model';
+import TagsModel from '../models/tags-model';
 
 const getArticles = (query) => {
     const { author: username, tag, favorited, offset = 0, limit = 20 } = query;
@@ -13,7 +13,7 @@ const getArticles = (query) => {
         include: 
         [
             {
-                model: usersModel,
+                model: UsersModel,
                 where: 
                     {
                         ...(username && { username })
@@ -22,7 +22,7 @@ const getArticles = (query) => {
                 required: false   
             },
             {
-                model: tagsModel,
+                model: TagsModel,
                 attributes: ['name'],
                 where: 
                     {
@@ -35,6 +35,15 @@ const getArticles = (query) => {
     });
 };
 
+const createArticle = async data => {
+    const newArticle = new ArticleModel({
+        ...data
+    });
+
+    return newArticle.save();
+};
+
 export {
-    getArticles
+    getArticles,
+    createArticle
 }
