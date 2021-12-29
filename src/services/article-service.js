@@ -1,4 +1,5 @@
 import ArticleModel from '../models/articles-model';
+import usersModel from '../models/users-model';
 
 const getArticles = (query) => {
     const limit = 20;
@@ -33,8 +34,21 @@ const createArticle = async data => {
     return newArticle.save();
 };
 
+const updateArticle = async (article, body) => {
+
+    if(typeof body.article.title !== 'undefined'){
+        body.article.slug = body.article.title;
+    }
+
+    return await ArticleModel.findByIdAndUpdate(article.id, body.article, { new: true });
+}
+
+const findArticleBySlug = slug => ArticleModel.findOne({ slug }); 
+
 export {
     getArticles,
     createArticle,
-    getSingleArticleBySlug
+    getSingleArticleBySlug,
+    updateArticle,
+    findArticleBySlug
 }

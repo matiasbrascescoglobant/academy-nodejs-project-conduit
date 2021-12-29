@@ -1,5 +1,6 @@
 import { getArticles, createArticle, 
-         getFeedArticles, getSingleArticleBySlug } from '../services/article-service';
+         updateArticle, getSingleArticleBySlug,
+         findArticleBySlug } from '../services/article-service';
 import { findUserByEmail, findUserByUsername } from '../services/user-service';
 import { findTagByName } from '../services/tag-service';
 import { responseArticles } from '../response_formatter/response-article';
@@ -86,9 +87,38 @@ const add_articles = async (req, res) => {
   }
 }
 
+const update_articles = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const article = await findArticleBySlug(slug);
+    if (!article) {
+      return res.status(422).json({
+        error: 'Article not found'
+      });
+    }
+
+    console.log("article");
+console.log(article);
+
+    const updatedArticle = await updateArticle(article, req.body);
+
+    console.log("updatedArticle");
+    console.log(updatedArticle);
+
+    return res.json({
+      articles: responseArticles(updatedArticle)
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message
+    });
+  }
+}
+
 export {
     get_articles,
     add_articles,
     get_feed_articles,
-    get_single_article_by_slug
+    get_single_article_by_slug,
+    update_articles
 };
