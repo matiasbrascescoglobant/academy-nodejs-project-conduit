@@ -1,5 +1,4 @@
 import ArticleModel from '../models/articles-model';
-import usersModel from '../models/users-model';
 
 const getArticles = (query) => {
     const limit = 20;
@@ -43,12 +42,24 @@ const updateArticle = async (article, body) => {
     return await ArticleModel.findByIdAndUpdate(article.id, body.article, { new: true });
 }
 
-const findArticleBySlug = slug => ArticleModel.findOne({ slug }); 
+const findArticleBySlug = slug => ArticleModel.findOne({ slug }).populate('author');
+
+const favoriteArticle = async (article) => {
+    article.favorited = Boolean(true);
+    if(typeof article.favoritesCount === 'undefined'){
+        article.favoritesCount = Number(1);
+    } else {
+        article.favoritesCount = Number(article.favoritesCount + 1);
+    }
+    
+    return await ArticleModel.findByIdAndUpdate(article.id, article, { new: true });
+}
 
 export {
     getArticles,
     createArticle,
     getSingleArticleBySlug,
     updateArticle,
-    findArticleBySlug
+    findArticleBySlug,
+    favoriteArticle
 }

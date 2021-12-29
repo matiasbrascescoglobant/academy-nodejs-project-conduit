@@ -19,15 +19,10 @@ const add_users = async (req, res) => {
           username
       });
 
-      const token = jwt.sign({
-        email: newUser.email,
-        username: newUser.username
-      }, process.env.JWT_SECRET);
-
       return res.status(201).json({
         user: {
           email: newUser.email,
-          token,
+          token: "",
           username: newUser.username,
           bio: newUser.bio || "",
           image: newUser.image || null

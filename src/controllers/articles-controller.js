@@ -1,6 +1,6 @@
 import { getArticles, createArticle, 
          updateArticle, getSingleArticleBySlug,
-         findArticleBySlug } from '../services/article-service';
+         findArticleBySlug, favoriteArticle } from '../services/article-service';
 import { findUserByEmail, findUserByUsername } from '../services/user-service';
 import { findTagByName } from '../services/tag-service';
 import { responseArticles } from '../response_formatter/response-article';
@@ -8,30 +8,20 @@ import slug from 'slug';
 
 const get_articles = async (req, res) => {
     try {
-
-      console.log("req.query.author")
-      console.log(req.query.author)
-
       const author = await findUserByUsername(req.query.author);
       const favoriter = await findUserByUsername(req.query.favorited);
       const tag = await findTagByName(req.query.tag);
 
-      console.log("author")
-      console.log(author)
+      if(favoriter){
+        req.query.favorited = Boolean(true);
+      } else {
+        req.query.favorited = null;
+      }
 
       if(author){
-        console.log("NO ENTRA!!!!")
         req.query.author = author.id;
       } else {
         req.query.author = null;
-      }
-
-      if(favoriter){
-        req.query._id = {$in: favoriter.favorites};
-      } else if(req.query.favorited){
-        req.query._id = {$in: []};
-      } else {
-        req.query.favorited = null;
       }
 
       if(tag){
@@ -131,10 +121,34 @@ const update_articles = async (req, res) => {
   }
 }
 
+const favorite_article = async (req, res) => {
+  try{
+    const { slug } = req.params;
+    const article = await findArticleBySlug(slug);
+    if (!article) {
+      return res.status(422).json({
+        error: 'Article not found'
+      });
+    }
+
+    const favorite = await favoriteArticle(article);
+
+    return res.json({
+      article: responseArticles(favorite)
+    });
+
+  }catch(error){
+      return res.status(500).json({
+          error: error.message
+      });
+  }
+}
+
 export {
     get_articles,
     add_articles,
     get_feed_articles,
     get_single_article_by_slug,
-    update_articles
+    update_articles,
+    favorite_article
 };
