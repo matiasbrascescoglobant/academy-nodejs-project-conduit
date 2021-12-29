@@ -8,16 +8,37 @@ import slug from 'slug';
 
 const get_articles = async (req, res) => {
     try {
+
+      console.log("req.query.author")
+      console.log(req.query.author)
+
       const author = await findUserByUsername(req.query.author);
+      const favoriter = await findUserByUsername(req.query.favorited);
       const tag = await findTagByName(req.query.tag);
 
+      console.log("author")
+      console.log(author)
+
       if(author){
-        req.query.author = author._id;
+        console.log("NO ENTRA!!!!")
+        req.query.author = author.id;
+      } else {
+        req.query.author = null;
+      }
+
+      if(favoriter){
+        req.query._id = {$in: favoriter.favorites};
+      } else if(req.query.favorited){
+        req.query._id = {$in: []};
+      } else {
+        req.query.favorited = null;
       }
 
       if(tag){
         req.query.tag = tag._id;
         req.query.tagList = {"$in" : [req.query.tag]};
+      } else {
+        req.query.tagList = null;
       }
 
       const articles = await getArticles(req.query);
@@ -51,10 +72,11 @@ const get_feed_articles = async (req, res) => {
 const get_single_article_by_slug = async (req, res) => {
   try {
     const { slug } = req.params;
+
     const article = await getSingleArticleBySlug(slug);
 
     return res.json({
-      articles: responseArticles(article)
+      article: responseArticles(article)
     });
   } catch (error) {
     return res.status(500).json({
@@ -97,16 +119,10 @@ const update_articles = async (req, res) => {
       });
     }
 
-    console.log("article");
-console.log(article);
-
     const updatedArticle = await updateArticle(article, req.body);
 
-    console.log("updatedArticle");
-    console.log(updatedArticle);
-
     return res.json({
-      articles: responseArticles(updatedArticle)
+      article: responseArticles(updatedArticle)
     });
   } catch (error) {
     return res.status(500).json({
