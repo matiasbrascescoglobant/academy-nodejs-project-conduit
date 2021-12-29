@@ -14,6 +14,8 @@ const createUser = async data => {
 
 const findUserByEmail = email => UserModel.findOne({ email }); 
 
+const findUserByUsername = username => UserModel.findOne({ username });
+
 const updateUser = async (user, body) => {
     const password = body.user.password ? encryptPass(body.user.password) : user.password;
     body.user.password = password;
@@ -30,5 +32,6 @@ function encryptPass(password) {
 export {
     createUser,
     findUserByEmail,
-    updateUser
+    updateUser,
+    findUserByUsername
 }

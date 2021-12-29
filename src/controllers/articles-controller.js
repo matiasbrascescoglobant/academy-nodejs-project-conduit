@@ -1,11 +1,24 @@
-import { getArticles, createArticle, getFeedArticles } from '../services/article-service';
-import { findUserByEmail } from '../services/user-service';
+import { getArticles, createArticle, 
+         getFeedArticles, getSingleArticleBySlug } from '../services/article-service';
+import { findUserByEmail, findUserByUsername } from '../services/user-service';
+import { findTagByName } from '../services/tag-service';
 import { responseArticles } from '../response_formatter/response-article';
-import TagsModel from '../models/tags-model';
 import slug from 'slug';
 
 const get_articles = async (req, res) => {
     try {
+      const author = await findUserByUsername(req.query.author);
+      const tag = await findTagByName(req.query.tag);
+
+      if(author){
+        req.query.author = author._id;
+      }
+
+      if(tag){
+        req.query.tag = tag._id;
+        req.query.tagList = {"$in" : [req.query.tag]};
+      }
+
       const articles = await getArticles(req.query);
 
       return res.json({
@@ -21,11 +34,26 @@ const get_articles = async (req, res) => {
 
 const get_feed_articles = async (req, res) => {
   try {
-    const articles = await getFeedArticles(req.query);
+    const articles = await getArticles(req.query);
 
     return res.json({
       articles: responseArticles(articles),
       articlesCount: articles.length
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message
+    });
+  }
+}
+
+const get_single_article_by_slug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const article = await getSingleArticleBySlug(slug);
+
+    return res.json({
+      articles: responseArticles(article)
     });
   } catch (error) {
     return res.status(500).json({
@@ -61,5 +89,6 @@ const add_articles = async (req, res) => {
 export {
     get_articles,
     add_articles,
-    get_feed_articles
+    get_feed_articles,
+    get_single_article_by_slug
 };

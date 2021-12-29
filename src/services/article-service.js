@@ -1,61 +1,29 @@
 import ArticleModel from '../models/articles-model';
-import UsersModel from '../models/users-model';
-import TagsModel from '../models/tags-model';
 
 const getArticles = (query) => {
-    const { author: username, tag, favorited, offset = 0, limit = 20 } = query;
+    const limit = 20;
+    const offset = 0;
 
-    return ArticleModel.find({ 
-        limit: limit, 
-        offset: offset,
-        distinct: true,
-        order: [['createdAt', 'DESC']], 
-        include: 
-        [
-            {
-                model: UsersModel,
-                where: 
-                    {
-                        ...(username && { username })
-                    },
-                atributes: ['username', 'bio', 'image'],
-                required: false   
-            },
-            {
-                model: TagsModel,
-                attributes: ['name'],
-                where: 
-                    {
-                        ...(tag && { name: tag })
-                    },
-                required: false
-            }
-        ],
-        where: { ...(favorited && {favorited}) }
-    });
+    if(typeof query.limit !== 'undefined'){
+        limit = query.limit;
+    }
+
+    if(typeof query.offset !== 'undefined'){
+        offset = query.offset;
+    }
+
+    return ArticleModel.find(query)
+        .limit(Number(limit))
+        .skip(Number(offset))
+        .sort({createdAt: 'desc'})
+        .populate('author')
+        .exec();
 };
 
-const getFeedArticles = (query) => {
-    const { offset = 0, limit = 20 } = query;
-
-    return ArticleModel.find({ 
-        limit: limit, 
-        offset: offset,
-        distinct: true,
-        order: [['createdAt', 'DESC']], 
-        include: 
-        [
-            {
-                model: UsersModel,
-                atributes: ['username', 'bio', 'image'],   
-            },
-            {
-                model: TagsModel,
-                attributes: ['name'],
-            }
-        ]
-    });
-};
+const getSingleArticleBySlug = (slug) => {
+    return ArticleModel.findOne({ slug: slug })
+            .populate('author');
+}
 
 const createArticle = async data => {
     const newArticle = new ArticleModel({
@@ -68,5 +36,5 @@ const createArticle = async data => {
 export {
     getArticles,
     createArticle,
-    getFeedArticles
+    getSingleArticleBySlug
 }
