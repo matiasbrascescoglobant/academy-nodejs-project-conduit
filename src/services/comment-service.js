@@ -8,6 +8,13 @@ const createComment = async data => {
     return newComment.save();
 };
 
+const getComments = (article) => {
+    return CommentModel.find({ article: article })
+            .populate('author')
+            .populate('article');
+}
+
 export {
-    createComment
+    createComment,
+    getComments
 }
