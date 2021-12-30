@@ -6,6 +6,8 @@ import { get_articles, add_articles,
          update_articles,
          favorite_article,
          unfavorite_article } from '../controllers/articles-controller';
+import { add_comment } from '../controllers/comments-controller';
+
 import authUserMiddleware from '../middlewares/auth';
 
 router.get('/', get_articles);
@@ -15,5 +17,6 @@ router.post('/', authUserMiddleware, add_articles);
 router.post('/:slug/favorite', authUserMiddleware, favorite_article);
 router.delete('/:slug/favorite', authUserMiddleware, unfavorite_article);
 router.put('/:slug', authUserMiddleware, update_articles);
+router.post('/:slug/comments', authUserMiddleware, add_comment);
 
 export default router;
