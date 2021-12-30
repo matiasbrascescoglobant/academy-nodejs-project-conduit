@@ -14,12 +14,12 @@ const getComments = (article) => {
             .populate('article');
 }
 
-const deleteComments = (commentId) => {
+const deleteComment = (commentId) => {
     return CommentModel.deleteOne({_id: commentId});
 }
 
 export {
     createComment,
     getComments,
-    deleteComments
+    deleteComment
 }

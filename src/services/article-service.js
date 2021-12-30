@@ -69,6 +69,12 @@ const unfavoriteArticle = async (article) => {
     return await ArticleModel.findByIdAndUpdate(article.id, article, { new: true });
 }
 
+const deleteArticle = (slug) => {
+    console.log("slug")
+    console.log(slug)
+    return ArticleModel.deleteOne({ slug: slug });
+}
+
 export {
     getArticles,
     createArticle,
@@ -76,5 +82,6 @@ export {
     updateArticle,
     findArticleBySlug,
     favoriteArticle,
-    unfavoriteArticle
+    unfavoriteArticle,
+    deleteArticle
 }

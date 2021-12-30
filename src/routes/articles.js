@@ -5,7 +5,8 @@ import { get_articles, add_articles,
          get_single_article_by_slug,
          update_articles,
          favorite_article,
-         unfavorite_article } from '../controllers/articles-controller';
+         unfavorite_article, 
+         delete_article} from '../controllers/articles-controller';
 import { add_comment, get_comment, delete_comment } from '../controllers/comments-controller';
 
 import authUserMiddleware from '../middlewares/auth';
@@ -20,5 +21,6 @@ router.put('/:slug', authUserMiddleware, update_articles);
 router.post('/:slug/comments', authUserMiddleware, add_comment);
 router.get('/:slug/comments', get_comment);
 router.delete('/:slug/comments/:id', authUserMiddleware, delete_comment);
+router.delete('/:slug', authUserMiddleware, delete_article);
 
 export default router;

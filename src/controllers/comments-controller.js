@@ -1,4 +1,4 @@
-import { createComment, getComments, deleteComments } from '../services/comment-service';
+import { createComment, getComments, deleteComment } from '../services/comment-service';
 import { findUserByEmail } from '../services/user-service';
 import { findArticleBySlug } from '../services/article-service';
 import { responseComments } from '../response_formatter/response-comment';
@@ -57,9 +57,9 @@ const add_comment = async (req, res) => {
     try {
         const { id } = req.params;
 
-        await deleteComments(id);
+        await deleteComment(id);
 
-        return res.json({});
+        return res.json();
     } catch (error) {
       return res.status(500).json({
         error: error.message
