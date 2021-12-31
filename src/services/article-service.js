@@ -1,8 +1,29 @@
 import ArticleModel from '../models/articles-model';
+import { findUserByUsername } from '../services/user-service';
+import { findTagByName } from '../services/tag-service';
 
-const getArticles = (query) => {
-    const limit = 20;
-    const offset = 0;
+const getArticles = async (query) => {
+    let limit = 20;
+    let offset = 0;
+    let queryFind = {};
+
+    if(query.author) {
+        const author = await findUserByUsername(query.author);
+        if(author){
+            queryFind.author = author.id;
+        } else if (query.author) {
+            queryFind.author = null;
+        }
+    }
+
+    if(query.tag){
+        const tag = await findTagByName(query.tag);
+        if(tag){
+            queryFind.tagList = {"$in" : [tag._id]};
+        } else {
+            queryFind.tagList = null;
+        }
+    }
 
     if(typeof query.limit !== 'undefined'){
         limit = query.limit;
@@ -12,11 +33,12 @@ const getArticles = (query) => {
         offset = query.offset;
     }
 
-    return ArticleModel.find(query)
+    return ArticleModel.find(queryFind)
         .limit(Number(limit))
         .skip(Number(offset))
         .sort({createdAt: 'desc'})
         .populate('author')
+        .populate('tagList')
         .exec();
 };
 
@@ -30,7 +52,7 @@ const createArticle = async data => {
         ...data
     });
 
-    return newArticle.save();
+    return (await newArticle.save()).populate('tagList');
 };
 
 const updateArticle = async (article, body) => {

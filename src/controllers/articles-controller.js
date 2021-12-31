@@ -2,36 +2,13 @@ import { getArticles, createArticle,
          updateArticle, getSingleArticleBySlug,
          findArticleBySlug, favoriteArticle,
          unfavoriteArticle, deleteArticle } from '../services/article-service';
-import { findUserByEmail, findUserByUsername } from '../services/user-service';
-import { findTagByName } from '../services/tag-service';
+import { findUserByEmail } from '../services/user-service';
 import { responseArticles } from '../response_formatter/response-article';
 import slug from 'slug';
+import tagsModel from '../models/tags-model';
 
 const get_articles = async (req, res) => {
     try {
-      const author = await findUserByUsername(req.query.author);
-      const favoriter = await findUserByUsername(req.query.favorited);
-      const tag = await findTagByName(req.query.tag);
-
-      if(favoriter){
-        req.query.favorited = Boolean(true);
-      } else {
-        req.query.favorited = null;
-      }
-
-      if(author){
-        req.query.author = author.id;
-      } else {
-        req.query.author = null;
-      }
-
-      if(tag){
-        req.query.tag = tag._id;
-        req.query.tagList = {"$in" : [req.query.tag]};
-      } else {
-        req.query.tagList = null;
-      }
-
       const articles = await getArticles(req.query);
 
       return res.json({
@@ -80,13 +57,23 @@ const add_articles = async (req, res) => {
   try{
     const { title, description, body, tagList = [] } = req.body.article;
     const author = await findUserByEmail(req.user.email);
+    const tags = [];
+
+    for (const name of tagList) {
+      let tag = await tagsModel.findOne( { name: name } )
+      if (!tag) {
+        tag = await tagsModel.create({ name })
+      }
+      tags.unshift(tag);
+    }
 
     const newArticle = await createArticle({
       title,
       description,
       body,
       author: author,
-      slug: slug(title)
+      slug: slug(title),
+      tagList: tags
     });
 
     return res.status(201).json({
