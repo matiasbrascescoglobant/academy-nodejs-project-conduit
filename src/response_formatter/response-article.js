@@ -1,3 +1,5 @@
+import { responseTags } from '../response_formatter/response-tag';
+
 const responseArticle = (article) => ({
   slug: article.slug,
   title: article.title,
@@ -14,7 +16,7 @@ const responseArticle = (article) => ({
         image: article.author.image || null,
         following: false
     },
-  tagList: article.tagList.map(tag => tag.name)
+  tagList: responseTags(article.tagList)
 });
 
 const responseArticles = (articles) => {

@@ -44,6 +44,7 @@ const getArticles = async (query) => {
 
 const getSingleArticleBySlug = (slug) => {
     return ArticleModel.findOne({ slug: slug })
+            .populate('tagList')
             .populate('author');
 }
 

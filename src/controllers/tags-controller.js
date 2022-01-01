@@ -15,8 +15,6 @@ import { getTags } from '../services/tag-service';
     }
   }
 
-  
-
 export {
     get_tags
 };
