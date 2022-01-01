@@ -1,58 +1,103 @@
-import { createProfile, findProfileByUser } from '../services/profile-service';
-import { findUserByUsername } from '../services/user-service';
+import { createProfile, countFollowings, getProfile, deleteProfile, findFollowings } from '../services/profile-service';
+import { findUserByEmail, findUserByUsername } from '../services/user-service';
 import { responseProfile } from '../response_formatter/response-profile';
 
-  const get_profile = async (req, res) => {
-    try {
-      const { username } = req.params;
-      const user = await findUserByUsername(username);
-      if (!user) {
-        return res.status(422).json({
-          error: 'User not found'
-        });
-      }
-      const profile = await findProfileByUser(user);
-      if (!profile) {
-        return res.status(422).json({
-          error: 'Profile not found'
-        });
-      }
-
-      return res.json({
-        profile: responseProfile(profile)
+const get_profile = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await findUserByUsername(username);
+    if (!user) {
+      return res.status(422).json({
+        error: 'User not found'
       });
-    } catch (error) {
-      return res.status(500).json({
-        error: error.message
-      })
     }
+
+    const follower = await findUserByEmail(req.user?.email);
+    
+    user.following = await getProfile(follower, user).count() > 0;
+
+    return res.json({
+      profile: responseProfile(user)
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message
+    })
   }
+}
 
-  const add_profile = async (req, res) => {
-    try{
-      const { username } = req.params;
+const add_profile = async (req, res) => {
+  try{
+    const { username } = req.params;
 
-      const user = await findUserByUsername(username);
-      if (!user) {
-        return res.status(422).json({
-          error: 'User not found'
-        });
-      }
-      
-      const newProfile = await createProfile({user: user});
-
-      return res.status(201).json({
-        profile: responseProfile(newProfile)
+    const following = await findUserByUsername(username);
+    if (!following) {
+      return res.status(422).json({
+        error: 'User not found'
       });
-
-    }catch(error){
-        return res.status(500).json({
-            error: error.message
-        });
     }
+
+    const { email } = req.user;
+
+    const follower = await findUserByEmail(email);
+    if (!follower) {
+      return res.status(422).json({
+        error: 'User not found'
+      });
+    }
+    
+    const profileExists = await getProfile(follower, following).count() > 0;
+    if(!profileExists) {
+      following.following = true;
+      await createProfile({ follower: follower, following: following });
+    }
+
+    return res.status(201).json({
+      profile: responseProfile(following)
+    });
+
+  }catch(error){
+      return res.status(500).json({
+          error: error.message
+      });
+  }
+}
+
+const delete_profile = async (req, res) => {
+  try{
+    const { username } = req.params;
+
+    const following = await findUserByUsername(username);
+    if (!following) {
+      return res.status(422).json({
+        error: 'User not found'
+      });
+    }
+
+    const { email } = req.user;
+
+    const follower = await findUserByEmail(email);
+    if (!follower) {
+      return res.status(422).json({
+        error: 'User not found'
+      });
+    }
+    
+    const profileDeleted = await deleteProfile(follower, following);
+
+    return res.json({
+      profile: responseProfile(profileDeleted.following)
+    });
+
+  }catch(error){
+      return res.status(500).json({
+          error: error.message
+      });
+  }
 }
 
 export {
     get_profile,
-    add_profile
+    add_profile,
+    delete_profile
 };

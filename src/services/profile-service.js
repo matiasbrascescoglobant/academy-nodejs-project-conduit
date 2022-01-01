@@ -8,9 +8,20 @@ const createProfile = async data => {
     return newProfile.save();
 };
 
-const findProfileByUser = user => ProfileModel.findOne({ user: user }).populate('user');
+const findFollowings = (user) => ProfileModel.find({ follower: user });
+
+const findFollowers = (user) => ProfileModel.find({ following: user });
+
+const getProfile = (follower, following) => ProfileModel
+                    .findOne({ follower: follower, following: following });     
+                    
+const deleteProfile = (follower, following) => ProfileModel
+                    .findOneAndDelete({ follower: follower, following: following });                    
 
 export {
     createProfile,
-    findProfileByUser
+    findFollowers,
+    findFollowings,
+    getProfile,
+    deleteProfile
 }

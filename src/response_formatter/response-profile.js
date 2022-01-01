@@ -1,8 +1,8 @@
-const responseProfile = (profile) => ({
-    username: profile.user.username,
-    bio: profile.user.bio || "",
-    image: profile.user.image || null,
-    following: profile.user.following || false,
+const responseProfile = (user) => ({
+    username: user.username,
+    bio: user.bio || "",
+    image: user.image || null,
+    following: user.following || false,
   });
   
   export {
