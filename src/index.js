@@ -1,10 +1,11 @@
 import app from './app';
 import debug from 'debug';
-import mongo from './database/mongo'
+import { connect } from './database/mongo'
 
+connect();
 
 const log = debug('globant:index');
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 3001
 
 app.listen(PORT, () => {
     log(`Server is running on port ${PORT}`);
