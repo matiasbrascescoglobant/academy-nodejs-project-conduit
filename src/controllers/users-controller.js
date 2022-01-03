@@ -21,6 +21,13 @@ const add_users = async (req, res) => {
           username
       });
 
+      const token = jwt.sign({
+        email: newUser.email,
+        username: newUser.username
+      }, process.env.JWT_SECRET);
+
+      newUser.token = token; 
+
       return res.status(201).json({
         user: responseUsers(newUser)
       });

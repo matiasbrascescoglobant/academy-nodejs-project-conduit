@@ -1,4 +1,4 @@
-import { createProfile, countFollowings, getProfile, deleteProfile, findFollowings } from '../services/profile-service';
+import { createProfile, getProfile, deleteProfile } from '../services/profile-service';
 import { findUserByEmail, findUserByUsername } from '../services/user-service';
 import { responseProfile } from '../response_formatter/response-profile';
 import { responseError } from '../response_formatter/response-errors';
@@ -27,7 +27,7 @@ const get_profile = async (req, res) => {
   }
 }
 
-const add_profile = async (req, res) => {
+const follow_user = async (req, res) => {
   try{
     const { username } = req.params;
 
@@ -64,7 +64,7 @@ const add_profile = async (req, res) => {
   }
 }
 
-const delete_profile = async (req, res) => {
+const unfollow_user = async (req, res) => {
   try{
     const { username } = req.params;
 
@@ -99,6 +99,6 @@ const delete_profile = async (req, res) => {
 
 export {
     get_profile,
-    add_profile,
-    delete_profile
+    follow_user,
+    unfollow_user
 };
