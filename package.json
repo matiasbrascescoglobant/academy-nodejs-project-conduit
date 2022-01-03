@@ -4,10 +4,10 @@
   "description": "Nodejs academy final project.",
   "main": "index.js",
   "scripts": {
-    "build": "babel src -d dist",
+    "build": "npm run clean:install && babel src -d dist",
     "test": "jest",
     "dev": "set DEBUG=globant:* & nodemon --exec ./node_modules/.bin/babel-node src/index.js",
-    "start": "npm run clean:install && npm run build && node dist/index.js",
+    "start": "node dist/index.js",
     "clean:install": "rm -rf node_modules dist && npm i"
   },
   "repository": {
