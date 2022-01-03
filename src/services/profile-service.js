@@ -16,7 +16,8 @@ const getProfile = (follower, following) => ProfileModel
                     .findOne({ follower: follower, following: following });     
                     
 const deleteProfile = (follower, following) => ProfileModel
-                    .findOneAndDelete({ follower: follower, following: following });                    
+                    .findOneAndDelete({ follower: follower, following: following })
+                    .populate('following');                    
 
 export {
     createProfile,

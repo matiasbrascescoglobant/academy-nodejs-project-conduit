@@ -93,8 +93,6 @@ const unfavoriteArticle = async (article) => {
 }
 
 const deleteArticle = (slug) => {
-    console.log("slug")
-    console.log(slug)
     return ArticleModel.deleteOne({ slug: slug });
 }
 

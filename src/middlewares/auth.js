@@ -1,6 +1,7 @@
 import debug from 'debug';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { HttpStatus } from 'http-status';
+import { responseError } from '../response_formatter/response-errors';
 
 const log = debug('globant:auth-middleware');
 
@@ -9,7 +10,7 @@ const authUserMiddleware = (req, res, next) => {
   
   if (!authHeader) {
     return res.status(422).json({
-      error: 'Missing token'
+      errors: responseError('Missing token')
     });
   }
 
@@ -27,12 +28,12 @@ const authUserMiddleware = (req, res, next) => {
     console.error(error)
     if (error instanceof JsonWebTokenError) {
       return res.status(401).send({
-        message: 'Wrong token'
+        errors: responseError('Wrong token')
       });
     }
 
     return res.status(HttpStatus[503]).json({
-      message: 'Service Unavailable'
+      errors: responseError('Service Unavailable')
     });
   }
 }

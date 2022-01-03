@@ -1,6 +1,7 @@
 import { createProfile, countFollowings, getProfile, deleteProfile, findFollowings } from '../services/profile-service';
 import { findUserByEmail, findUserByUsername } from '../services/user-service';
 import { responseProfile } from '../response_formatter/response-profile';
+import { responseError } from '../response_formatter/response-errors';
 
 const get_profile = async (req, res) => {
   try {
@@ -8,7 +9,7 @@ const get_profile = async (req, res) => {
     const user = await findUserByUsername(username);
     if (!user) {
       return res.status(422).json({
-        error: 'User not found'
+        errors: responseError('User not found')
       });
     }
 
@@ -20,8 +21,8 @@ const get_profile = async (req, res) => {
       profile: responseProfile(user)
     });
   } catch (error) {
-    return res.status(500).json({
-      error: error.message
+    return res.status(422).json({
+      errors: responseError(error.message)
     })
   }
 }
@@ -33,7 +34,7 @@ const add_profile = async (req, res) => {
     const following = await findUserByUsername(username);
     if (!following) {
       return res.status(422).json({
-        error: 'User not found'
+        errors: responseError('User not found')
       });
     }
 
@@ -42,7 +43,7 @@ const add_profile = async (req, res) => {
     const follower = await findUserByEmail(email);
     if (!follower) {
       return res.status(422).json({
-        error: 'User not found'
+        errors: responseError('User not found')
       });
     }
     
@@ -52,13 +53,13 @@ const add_profile = async (req, res) => {
       await createProfile({ follower: follower, following: following });
     }
 
-    return res.status(201).json({
+    return res.json({
       profile: responseProfile(following)
     });
 
   }catch(error){
-      return res.status(500).json({
-          error: error.message
+      return res.status(422).json({
+        errors: responseError(error.message)
       });
   }
 }
@@ -70,7 +71,7 @@ const delete_profile = async (req, res) => {
     const following = await findUserByUsername(username);
     if (!following) {
       return res.status(422).json({
-        error: 'User not found'
+        errors: responseError('User not found')
       });
     }
 
@@ -79,7 +80,7 @@ const delete_profile = async (req, res) => {
     const follower = await findUserByEmail(email);
     if (!follower) {
       return res.status(422).json({
-        error: 'User not found'
+        errors: responseError('User not found')
       });
     }
     
@@ -90,8 +91,8 @@ const delete_profile = async (req, res) => {
     });
 
   }catch(error){
-      return res.status(500).json({
-          error: error.message
+      return res.status(422).json({
+        errors: responseError(error.message)
       });
   }
 }

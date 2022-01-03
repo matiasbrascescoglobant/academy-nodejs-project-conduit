@@ -6,6 +6,7 @@ import { findUserByEmail } from '../services/user-service';
 import { responseArticles } from '../response_formatter/response-article';
 import slug from 'slug';
 import tagsModel from '../models/tags-model';
+import { responseError } from '../response_formatter/response-errors';
 
 const get_articles = async (req, res) => {
     try {
@@ -16,8 +17,8 @@ const get_articles = async (req, res) => {
         articlesCount: articles.length
       });
     } catch (error) {
-      return res.status(500).json({
-        error: error.message
+      return res.status(422).json({
+        errors: responseError(error.message)
       });
     }
 }
@@ -31,8 +32,8 @@ const get_feed_articles = async (req, res) => {
       articlesCount: articles.length
     });
   } catch (error) {
-    return res.status(500).json({
-      error: error.message
+    return res.status(422).json({
+      errors: responseError(error.message)
     });
   }
 }
@@ -47,8 +48,8 @@ const get_single_article_by_slug = async (req, res) => {
       article: responseArticles(article)
     });
   } catch (error) {
-    return res.status(500).json({
-      error: error.message
+    return res.status(422).json({
+      errors: responseError(error.message)
     });
   }
 }
@@ -81,8 +82,8 @@ const add_articles = async (req, res) => {
     });
 
   }catch(error){
-      return res.status(500).json({
-          error: error.message
+      return res.status(422).json({
+        errors: responseError(error.message)
       });
   }
 }
@@ -93,7 +94,7 @@ const update_articles = async (req, res) => {
     const article = await findArticleBySlug(slug);
     if (!article) {
       return res.status(422).json({
-        error: 'Article not found'
+        errors: responseError('Article not found')
       });
     }
 
@@ -103,8 +104,8 @@ const update_articles = async (req, res) => {
       article: responseArticles(updatedArticle)
     });
   } catch (error) {
-    return res.status(500).json({
-      error: error.message
+    return res.status(422).json({
+      errors: responseError(error.message)
     });
   }
 }
@@ -115,7 +116,7 @@ const favorite_article = async (req, res) => {
     const article = await findArticleBySlug(slug);
     if (!article) {
       return res.status(422).json({
-        error: 'Article not found'
+        errors: responseError('Article not found')
       });
     }
 
@@ -126,8 +127,8 @@ const favorite_article = async (req, res) => {
     });
 
   }catch(error){
-      return res.status(500).json({
-          error: error.message
+      return res.status(422).json({
+        errors: responseError(error.message)
       });
   }
 }
@@ -138,7 +139,7 @@ const unfavorite_article = async (req, res) => {
     const article = await findArticleBySlug(slug);
     if (!article) {
       return res.status(422).json({
-        error: 'Article not found'
+        errors: responseError('Article not found')
       });
     }
 
@@ -149,8 +150,8 @@ const unfavorite_article = async (req, res) => {
     });
 
   }catch(error){
-      return res.status(500).json({
-          error: error.message
+      return res.status(422).json({
+        errors: responseError(error.message)
       });
   }
 }
@@ -163,8 +164,8 @@ const delete_article = async (req, res) => {
 
       return res.json();
   } catch (error) {
-    return res.status(500).json({
-      error: error.message
+    return res.status(422).json({
+      errors: responseError(error.message)
     });
   }
 }

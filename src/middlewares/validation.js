@@ -1,16 +1,15 @@
 import { validationResult } from "express-validator";
 
-export default function (request, response, next) {
-  const result = validationResult(request);
+const errorMsg = ({ msg }) => {
+  return `${msg}`
+}
 
+export default function (request, response, next) {
+  const result = validationResult(request).formatWith(errorMsg);
   if (!result.isEmpty()) {
     return response.status(422).json(
       {
-        "errors": {
-          "body": [
-            result.array()
-          ]
-        }  
+        errors: result.array()
       }
     );
   }

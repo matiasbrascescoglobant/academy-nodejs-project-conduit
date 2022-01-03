@@ -2,6 +2,7 @@ import { createComment, getComments, deleteComment } from '../services/comment-s
 import { findUserByEmail } from '../services/user-service';
 import { findArticleBySlug } from '../services/article-service';
 import { responseComments } from '../response_formatter/response-comment';
+import { responseError } from '../response_formatter/response-errors';
 
 const add_comment = async (req, res) => {
     try{
@@ -11,7 +12,7 @@ const add_comment = async (req, res) => {
       const article = await findArticleBySlug(slug);
       if (!article) {
         return res.status(422).json({
-          error: 'Article not found'
+          errors: responseError('Article not found')
         });
       }
   
@@ -26,8 +27,8 @@ const add_comment = async (req, res) => {
       });
   
     }catch(error){
-        return res.status(500).json({
-            error: error.message
+        return res.status(422).json({
+          errors: responseError(error.message)
         });
     }
   }
@@ -38,7 +39,7 @@ const add_comment = async (req, res) => {
         const article = await findArticleBySlug(slug);
         if (!article) {
             return res.status(422).json({
-            error: 'Article not found'
+              errors: responseError('Article not found')
             });
         }
         const comments = await getComments(article);
@@ -47,8 +48,8 @@ const add_comment = async (req, res) => {
             comments: responseComments(comments)
         });
     } catch (error) {
-      return res.status(500).json({
-        error: error.message
+      return res.status(422).json({
+        errors: responseError(error.message)
       });
     }
   }
@@ -61,8 +62,8 @@ const add_comment = async (req, res) => {
 
         return res.json();
     } catch (error) {
-      return res.status(500).json({
-        error: error.message
+      return res.status(422).json({
+        errors: responseError(error.message)
       });
     }
   }
