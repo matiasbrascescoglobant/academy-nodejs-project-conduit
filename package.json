@@ -8,7 +8,7 @@
     "test": "jest",
     "dev": "set DEBUG=globant:* & nodemon --exec ./node_modules/.bin/babel-node src/index.js",
     "start": "npm run clean:install && npm run build && node dist/index.js",
-    "clean:install": "rd /s /q node_modules dist && npm i"
+    "clean:install": "rm -rf node_modules dist && npm i"
   },
   "repository": {
     "type": "git",
