@@ -1,8 +1,8 @@
 import app from './app';
 import debug from 'debug';
-import { connect } from './database/mongo'
+import { connectDB } from './database/mongo'
 
-connect();
+connectDB();
 
 const log = debug('globant:index');
 const PORT = process.env.PORT || 3001
