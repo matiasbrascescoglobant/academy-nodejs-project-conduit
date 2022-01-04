@@ -1,11 +1,9 @@
-const withoutImage = "https://th.bing.com/th/id/OIP.mwhUIb-rNVOl0fRnsAO9JAAAAA?pid=ImgDet&rs=1";
-
 const responseUser = (user) => ({
     email: user.email,
     token: user.token || "",
     username: user.username,
     bio: user.bio || "",
-    image: user.image || withoutImage
+    image: user.image || null
   });
   
   const responseUsers = (users) => {

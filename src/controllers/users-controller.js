@@ -6,6 +6,8 @@ import { responseError } from '../response_formatter/response-errors';
 
 const add_users = async (req, res) => {
     try{
+      const withoutImage = "https://th.bing.com/th/id/OIP.mwhUIb-rNVOl0fRnsAO9JAAAAA?pid=ImgDet&rs=1";
+
       const { email, password, username } = req.body.user;
 
       const user = await findUserByEmail(email);
@@ -18,7 +20,8 @@ const add_users = async (req, res) => {
       const newUser = await createUser({
           email,
           password,
-          username
+          username,
+          image: withoutImage
       });
 
       const token = jwt.sign({
