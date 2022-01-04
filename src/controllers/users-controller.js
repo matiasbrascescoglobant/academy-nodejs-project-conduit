@@ -44,7 +44,7 @@ const login_user = async (req, res) => {
         const { email, password } = req.body.user;
         const user = await findUserByEmail(email);
         if (!user || !bcrypt.compareSync(password, user.password)) {
-            return res.status(422).json({
+            return res.status(401).json({
               errors: responseError('Wrong credentials')
             });
         }
