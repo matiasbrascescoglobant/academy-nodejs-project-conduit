@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/matiasbrascescoglobant/academy-nodejs-project-conduit#readme",
   "dependencies": {
+    "@babel/cli": "^7.16.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
