@@ -6,8 +6,7 @@ dotenv.config();
 const log = debug('globant:db');
 const uri = process.env.MONGO_URI;
 const environment = process.env.NODE_ENV || 'default';
-console.log(uri)
-console.log(environment)
+
 const connectDB = async () => { 
     mongoose.connect(uri, {}, () =>{
         log('Database connection is ready.');
