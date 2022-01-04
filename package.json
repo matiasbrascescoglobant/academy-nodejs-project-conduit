@@ -1,0 +1,61 @@
+{
+  "name": "academy-nodejs-project-conduit",
+  "version": "1.0.0",
+  "description": "Nodejs academy final project.",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "test": "cross-env NODE_ENV=test jest",
+    "dev": "set DEBUG=globant:* && cross-env NODE_ENV=dev nodemon --exec ./node_modules/.bin/babel-node src/index.js",
+    "start": "cross-env NODE_ENV=prod npm run build && node dist/index.js",
+    "start:local": "cross-env NODE_ENV=prod npm run clean:install && npm run build && node dist/index.js",
+    "clean:install": "rm -rf node_modules dist && npm i"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matiasbrascescoglobant/academy-nodejs-project-conduit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matiasbrascescoglobant/academy-nodejs-project-conduit/issues"
+  },
+  "homepage": "https://github.com/matiasbrascescoglobant/academy-nodejs-project-conduit#readme",
+  "dependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.5",
+    "@babel/node": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "debug": "^4.3.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "express-validator": "^6.14.0",
+    "helmet": "^4.6.0",
+    "http-status": "^1.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.3",
+    "mongoose-unique-validator": "^3.0.0",
+    "morgan": "^1.10.0",
+    "slug": "^5.2.0",
+    "standard": "^16.0.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.5",
+    "@babel/node": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "jest": "^27.4.5",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.1.6"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFiles": [
+      "dotenv/config"
+    ]
+  }
+}
