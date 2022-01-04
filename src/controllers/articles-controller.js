@@ -98,6 +98,10 @@ const update_articles = async (req, res) => {
       });
     }
 
+    if(typeof req.body.article.title !== 'undefined'){
+      req.body.article.slug = slug(req.body.article.title);
+    }
+    
     const updatedArticle = await updateArticle(article, req.body);
 
     return res.json({
