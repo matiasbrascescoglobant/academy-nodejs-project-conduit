@@ -68,9 +68,17 @@ const login_user = async (req, res) => {
 
   const update_users = async (req, res) => {
     try {
+      const userBody = await findUserByEmail(req.body.user.email);
+
+      if(req.user.email !== req.body.user.email && userBody){
+        return res.status(422).json({
+          errors: responseError('The email already exists')
+        });
+      }
+
       const user = await findUserByEmail(req.user.email);
       if (!user) {
-        return res.status(422).json({
+        return res.status(404).json({
           errors: responseError('User not found')
         });
       }

@@ -9,7 +9,7 @@ export default function (request, response, next) {
   if (!result.isEmpty()) {
     return response.status(422).json(
       {
-        errors: result.array()
+        errors: { body: result.array() }
       }
     );
   }

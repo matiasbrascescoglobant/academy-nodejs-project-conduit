@@ -8,7 +8,7 @@ const get_profile = async (req, res) => {
     const { username } = req.params;
     const user = await findUserByUsername(username);
     if (!user) {
-      return res.status(422).json({
+      return res.status(404).json({
         errors: responseError('User not found')
       });
     }
@@ -33,8 +33,8 @@ const follow_user = async (req, res) => {
 
     const following = await findUserByUsername(username);
     if (!following) {
-      return res.status(422).json({
-        errors: responseError('User not found')
+      return res.status(404).json({
+        errors: responseError('Following not found')
       });
     }
 
@@ -42,8 +42,8 @@ const follow_user = async (req, res) => {
 
     const follower = await findUserByEmail(email);
     if (!follower) {
-      return res.status(422).json({
-        errors: responseError('User not found')
+      return res.status(404).json({
+        errors: responseError('Follower not found')
       });
     }
     
@@ -70,8 +70,8 @@ const unfollow_user = async (req, res) => {
 
     const following = await findUserByUsername(username);
     if (!following) {
-      return res.status(422).json({
-        errors: responseError('User not found')
+      return res.status(404).json({
+        errors: responseError('Following not found')
       });
     }
 
@@ -79,8 +79,8 @@ const unfollow_user = async (req, res) => {
 
     const follower = await findUserByEmail(email);
     if (!follower) {
-      return res.status(422).json({
-        errors: responseError('User not found')
+      return res.status(404).json({
+        errors: responseError('Follower not found')
       });
     }
     
