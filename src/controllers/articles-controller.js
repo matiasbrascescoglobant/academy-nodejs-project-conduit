@@ -4,7 +4,7 @@ import { getArticles, createArticle,
          unfavoriteArticle, deleteArticle } from '../services/article-service';
 import { findUserByEmail } from '../services/user-service';
 import { responseArticles } from '../response_formatter/response-article';
-import slug from 'slug';
+import slugFormat from 'slug';
 import tagsModel from '../models/tags-model';
 import { responseError } from '../response_formatter/response-errors';
 
@@ -73,7 +73,7 @@ const add_articles = async (req, res) => {
       description,
       body,
       author: author,
-      slug: slug(title),
+      slug: slugFormat(title),
       tagList: tags
     });
 
@@ -99,9 +99,8 @@ const update_articles = async (req, res) => {
     }
 
     if(typeof req.body.article.title !== 'undefined'){
-      req.body.article.slug = slug(req.body.article.title);
+      req.body.article.slug = slugFormat(req.body.article.title);
     }
-    
     const updatedArticle = await updateArticle(article, req.body);
 
     return res.json({
