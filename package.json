@@ -7,7 +7,7 @@
     "build": "babel src -d dist",
     "test": "jest",
     "dev": "set DEBUG=globant:* && nodemon --exec ./node_modules/.bin/babel-node src/index.js",
-    "start": "npm run clean:install && node dist/index.js",
+    "start": "node dist/index.js",
     "clean:install": "rm -rf node_modules dist && npm i"
   },
   "repository": {
