@@ -93,7 +93,7 @@ const update_articles = async (req, res) => {
     const { slug } = req.params;
     const article = await findArticleBySlug(slug);
     if (!article) {
-      return res.status(422).json({
+      return res.status(404).json({
         errors: responseError('Article not found')
       });
     }
@@ -115,7 +115,7 @@ const favorite_article = async (req, res) => {
     const { slug } = req.params;
     const article = await findArticleBySlug(slug);
     if (!article) {
-      return res.status(422).json({
+      return res.status(404).json({
         errors: responseError('Article not found')
       });
     }
@@ -138,7 +138,7 @@ const unfavorite_article = async (req, res) => {
     const { slug } = req.params;
     const article = await findArticleBySlug(slug);
     if (!article) {
-      return res.status(422).json({
+      return res.status(404).json({
         errors: responseError('Article not found')
       });
     }
