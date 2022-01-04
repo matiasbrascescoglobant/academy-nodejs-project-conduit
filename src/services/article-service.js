@@ -57,11 +57,6 @@ const createArticle = async data => {
 };
 
 const updateArticle = async (article, body) => {
-
-    if(typeof body.article.title !== 'undefined'){
-        body.article.slug = body.article.title;
-    }
-
     return await ArticleModel.findByIdAndUpdate(article.id, body.article, { new: true });
 }
 
